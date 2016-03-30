@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GuessThatNumber</string>
+    <string name="easy_rules">You have 5 guesses to find the number we\'re seeking (1-10).\nEnter your number and click \"Enter Number\", if your guess is higher than the target number you should try with a lower number and vice versa.\nGood luck!</string>
+    <string name="medium_rules">You have 7 guesses to find the number we\'re seeking (1-100).\nEnter your number and click \"Enter Number\", if your guess is higher than the target number you should try with a lower number and vice versa.\nGood luck!</string>
+    <string name="hard_rules">You have 10 guesses to find the number we\'re seeking (1-1000).\nEnter your number and click \"Enter Number\", if your guess is higher than the target number you should try with a lower number and vice versa.\nGood luck!</string>
+    <string name="error">Oops, something went wrong. Hit the back button and try again</string>
+</resources>
