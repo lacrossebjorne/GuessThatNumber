@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.util.Random;
 
 /**
- * Created by bjorn on 2016-03-29.
+ * Created by Björn Dalberg on 2016-03-29.
  */
 public class Game extends AppCompatActivity {
 

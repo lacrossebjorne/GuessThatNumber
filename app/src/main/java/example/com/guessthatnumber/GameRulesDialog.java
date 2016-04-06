@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Created by bjorn on 2016-03-30.
+ * Created by Björn Dalberg on 2016-03-30.
  */
 public class GameRulesDialog extends DialogFragment {
 

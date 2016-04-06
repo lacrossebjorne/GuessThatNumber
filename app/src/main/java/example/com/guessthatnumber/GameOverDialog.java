@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 /**
- * Created by bjorn on 2016-03-30.
+ * Created by Björn Dalberg on 2016-03-30.
  */
 public class GameOverDialog extends DialogFragment {
 
