@@ -34,7 +34,7 @@ public class GameOverDialog extends DialogFragment {
         if (winloss) {
             int random = getArguments().getInt("theNumber");
             int tries = getArguments().getInt("tries");
-            alertDialogBuilder.setMessage("Yay! You guessed the secret number - " + random + " - in only " + tries + " guesses!");
+            alertDialogBuilder.setMessage("You guessed the secret number: " + random + " with only " + tries + " guesses.\nClick OK to play again.");
         }else
             alertDialogBuilder.setMessage("Bummer you didn't find the number.\n Now you will always wonder...");
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {

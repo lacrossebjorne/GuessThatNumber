@@ -3,9 +3,12 @@ package example.com.guessthatnumber;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.Random;
@@ -16,9 +19,12 @@ import java.util.Random;
 public class Game extends AppCompatActivity {
 
     private Button zeroB, oneB, twoB, threeB, fourB, fiveB, sixB, sevenB, eightB, nineB, clearB, inputB;
-    private TextView previousGuesses, triesLeft, display;
+    private TextView rules, triesLeftText, display;
     private String input = "";
-    private Integer tries;
+    private Integer tries = 1;
+    private Integer noOfTries;
+    private int columnCount = 0;
+    private TableLayout prevGuessesTable;
 
 
     @Override
@@ -26,15 +32,19 @@ public class Game extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
 
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridL);
         final int random = new Random().nextInt(MainActivity.getLevel()) + 1;
-        setNoOfTries();
-        triesLeft = (TextView) findViewById(R.id.triesLeft);
-        triesLeft.setText("Tries left " + tries.toString());
+        rules = (TextView) findViewById(R.id.rules);
+        if(MainActivity.getLevel() == 10)
+            rules.setText("Find the number between 1 and 10");
+        else if (MainActivity.getLevel() == 100)
+            rules.setText("Find the number between 1 and 100");
+        else
+            rules.setText("Find the number between 1 and 1000");
+        noOfTries = setNoOfTries();
+        triesLeftText = (TextView) findViewById(R.id.triesLeft);
+        triesLeftText.setText(noOfTries.toString());
         display = (TextView) findViewById(R.id.display);
-        previousGuesses = (TextView) findViewById(R.id.prevField);
-
-        //previousGuesses.setWidth(gridLayout.getMeasuredWidth());
+        prevGuessesTable = (TableLayout) findViewById(R.id.prevTable);
 
         zeroB = (Button) findViewById(R.id.zeroB);
         oneB = (Button) findViewById(R.id.oneB);
@@ -48,9 +58,6 @@ public class Game extends AppCompatActivity {
         nineB = (Button) findViewById(R.id.nineB);
         clearB = (Button) findViewById(R.id.clearB);
         inputB = (Button) findViewById(R.id.inputB);
-
-
-        //inputB.setWidth(gridLayout.getWidth());
 
         zeroB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,46 +150,68 @@ public class Game extends AppCompatActivity {
         inputB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (tries > 0) {
-                    tries--;
-                    if (Integer.parseInt(input)== random) {
+                if (!input.equals("")) {
+                    if (tries < noOfTries) {
+                        if (Integer.parseInt(input) == random) {
+                            Integer triesLeft = noOfTries - tries;
+                            triesLeftText.setText(triesLeft.toString());
+                            FragmentManager fm = getFragmentManager();
+                            GameOverDialog god = GameOverDialog.newInstance("Win!", random, true, tries);
+                            god.show(fm, "game_over_frag");
+                        } else if (Integer.parseInt(input) < random) {
+                            insertPreviousGuess("more than " + input);
+                            Integer triesLeft = noOfTries - tries;
+                            triesLeftText.setText(triesLeft.toString());
+                        } else {
+                            insertPreviousGuess("less than " + input);
+                            Integer triesLeft = noOfTries - tries;
+                            triesLeftText.setText(triesLeft.toString());
+                        }
+                        input = "";
+                        display.setText("0");
+                        tries++;
+                    } else {
                         FragmentManager fm = getFragmentManager();
-                        GameOverDialog god = GameOverDialog.newInstance("Win!", random, true, tries);
+                        GameOverDialog god = GameOverDialog.newInstance("Loss!", random, false, tries);
                         god.show(fm, "game_over_frag");
                     }
-
-                    else if (Integer.parseInt(input) < random) {
-                        previousGuesses.setText(previousGuesses.getText() + "\nmore than " + input);
-                        triesLeft.setText("Tries left " + tries);
-                    }
-                    else {
-                        previousGuesses.setText(previousGuesses.getText() + "\nless than " + input);
-                        triesLeft.setText("Tries left " + tries);
-                    }
-                    input = "";
-                    display.setText("0");
-                }else {
-                    FragmentManager fm = getFragmentManager();
-                    GameOverDialog god = GameOverDialog.newInstance("Loss!", random, false, tries);
-                    god.show(fm, "game_over_frag");
                 }
             }
-
-
         });
     }
 
-    private void setNoOfTries() {
+    private Integer setNoOfTries() {
         switch (MainActivity.getLevel()) {
             case 10:
-                tries = 5;
-                break;
+                return 5;
             case 100:
-                tries = 7;
-                break;
+                return 7;
             case 1000:
-                tries = 11;
-                break;
+                return 11;
+            default:
+                return 0;
         }
+    }
+
+    private void insertPreviousGuess(String guess) {
+        TextView text = new TextView(Game.this);
+        text.setText(guess);
+        text.setTextSize(12);
+        text.setPadding(2, 0, 0, 0);
+        text.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        if((columnCount % 2 == 0) || columnCount == 0) {
+            TableRow row = new TableRow(Game.this);
+            row.addView(text);
+            text.setGravity(Gravity.START);
+            row.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            prevGuessesTable.addView(row);
+        } else {
+            int rowCount = prevGuessesTable.getChildCount();
+            TableRow row = (TableRow) prevGuessesTable.getChildAt(rowCount - 1);
+            text.setGravity(Gravity.START);
+            row.addView(text);
+        }
+        columnCount++;
     }
 }

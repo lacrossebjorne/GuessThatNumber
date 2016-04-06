@@ -8,15 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
     private Button easy, medium, hard;
     private static int level;
+    private TextView logoText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         easy = (Button) findViewById(R.id.easyButton);
         medium = (Button) findViewById(R.id.mediumButton);
